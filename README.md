@@ -1,5 +1,7 @@
 # MonoECS
 
+![](particleDemo.gif)
+
 An Entitiy Component System for monogame,
 
 (systems are called services oops)
