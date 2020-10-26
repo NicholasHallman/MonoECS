@@ -56,11 +56,24 @@ namespace ECS
             components.Remove(t);
         }
 
+        public void RemoveAllComponents()
+        {
+            foreach(Type component in components.Keys)
+            {
+                int index = components[component];
+                ComponentReference componentReference = new ComponentReference()
+                {
+                    index = index,
+                    ComponentType = component
+                };
+                componentManager.Remove(componentReference);
+            }
+        }
+
         public T GetComponent<T>() where T: Component
         {
             T component = (T)Activator.CreateInstance(typeof(T));
             Type t = component.GetType();
-
 
             if( !components.ContainsKey(t))
             {

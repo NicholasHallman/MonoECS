@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,11 +12,16 @@ namespace ECS
         private List<Entity> entities;
         private ComponentManager componentManager;
         private Dictionary<string, List<Service>> services;
+        private bool cacheEmpty = true;
+
+        public static SpriteBatch spriteBatch;
+        public static ContentManager content;
+        public static GraphicsDevice GraphicsDevice;
 
         public World()
         {
             entities = new List<Entity>();
-            componentManager = new ComponentManager();
+            componentManager = ComponentManager.Instance();
             services = new Dictionary<string, List<Service>>();
             services["default"] = new List<Service>();
         }
@@ -23,7 +30,29 @@ namespace ECS
         {
             Entity entity = new Entity();
             entities.Add(entity);
+            RemoveServiceCache();
             return entity;
+        }
+
+        public void RemoveEntity(Entity e)
+        {
+            entities.Remove(e);
+            e.RemoveAllComponents();
+            cacheEmpty = true;
+        }
+
+        public void RemoveServiceCache()
+        {
+            if (cacheEmpty) return;
+            foreach(string key in services.Keys)
+            {
+                foreach(Service service in services[key])
+                {
+                    service.IgnoreCache();
+                }
+            }
+            cacheEmpty = true;
+            return;
         }
 
         public void AddServiceGroup(string name){
@@ -39,7 +68,7 @@ namespace ECS
             return this;
         }
 
-        public World RemoveSystem(Service service, string group)
+        public World RemoveService(Service service, string group)
         {
             services[group].Remove(service);
             return this;
@@ -49,8 +78,14 @@ namespace ECS
         {
             foreach( Service service in services[group])
             {
-                service.Run();
+                service.Run(this);
             }
+            cacheEmpty = false;
+        }
+
+        public List<Entity> GetEntitiesWithComponent<T>()
+        {
+            return componentManager.GetEntitiesWithComponent(typeof(T));
         }
 
     }

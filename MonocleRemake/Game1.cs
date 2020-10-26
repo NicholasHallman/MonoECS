@@ -17,6 +17,19 @@ namespace MonocleRemake
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+
+            _graphics.ToggleFullScreen();
+
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+
+            _graphics.ToggleFullScreen();
+
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+
+            //_graphics.ToggleFullScreen();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             world = new World();
@@ -34,14 +47,22 @@ namespace MonocleRemake
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            World.spriteBatch = _spriteBatch;
+            World.content = Content;
+            World.GraphicsDevice = GraphicsDevice;
 
-            Player.Register(world, Content, _spriteBatch);
+            Player.Register(world);
 
             world.AddServiceGroup("draw");
             world.AddServiceGroup("update");
 
-            Type[] components = new Type[] { typeof(Position), typeof(SpriteRenderer)};
-            world.AddService(new SpriteRendererService().AddQuery(new Query(components)), "draw");
+            world.AddService(new LifetimeDespawner(), "update");
+            world.AddService(new ParticleSpawner(), "update");
+            world.AddService(new PlayerController(), "update");
+            world.AddService(new PlayerAnimator(), "update");
+            world.AddService(new DirectionMover(), "update");
+            world.AddService(new Animator(), "update");
+            world.AddService(new SpriteRendererService(), "draw");
 
             // TODO: use this.Content to load your game content here
         }
@@ -55,19 +76,19 @@ namespace MonocleRemake
 
             world.Run("update");
 
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.ForestGreen);
             // TODO: Add your drawing code here
 
             world.Run("draw");
 
             base.Draw(gameTime);
         }
+
+
     }
 }

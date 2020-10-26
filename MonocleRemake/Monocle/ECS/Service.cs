@@ -9,7 +9,7 @@ namespace ECS
 {
     abstract class Service
     {
-        private Query query;
+        protected Query query;
 
         public Service AddQuery(Query query)
         {
@@ -17,11 +17,16 @@ namespace ECS
             return this;
         }
 
-        public abstract void Execute(Entity[] entities);
-
-        public void Run()
+        public void IgnoreCache()
         {
-            Execute(query.All());
+            this.query.useCache = false;
+        }
+
+        public abstract void Execute(Entity[] entities, World w);
+
+        public void Run(World w)
+        {
+            Execute(query.All(), w);
         }
     }
 }

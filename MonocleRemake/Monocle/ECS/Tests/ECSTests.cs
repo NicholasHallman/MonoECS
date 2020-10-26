@@ -16,7 +16,7 @@ namespace Monocle.Tests
 
     class TestService : Service
     {
-        public override void Execute(Entity[] entities)
+        public override void Execute(Entity[] entities, World w)
         {
             foreach (Entity e in entities)
             {

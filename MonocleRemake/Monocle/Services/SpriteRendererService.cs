@@ -10,18 +10,29 @@ namespace MonocleRemake.Monocle.Services
 {
     class SpriteRendererService : Service
     {
-        public static Type[] QueryComponents = new Type[]{typeof(SpriteRenderer), typeof(Position) };
+        public static Type[] QueryComponents = new Type[]{
+            typeof(Sprite), 
+            typeof(Position)
+        };
 
-        public override void Execute(Entity[] entities)
+        public SpriteRendererService()
         {
-            foreach(Entity entity in entities)
+            query = new Query(QueryComponents);
+        }
+
+        public override void Execute(Entity[] entities, World w)
+        {
+            World.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp);
+
+            foreach (Entity entity in entities)
             {
-                SpriteRenderer sr = entity.GetComponent<SpriteRenderer>();
-                sr.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null,
-                Matrix.CreateScale(10f));
-                sr.spriteBatch.Draw(sr.sprite, new Rectangle(0, 0, 8, 8), Color.White);
-                sr.spriteBatch.End();
+                Sprite sr = entity.GetComponent<Sprite>();
+                Vector2 pos = (entity.GetComponent<Position>()).position;
+                SpriteEffects effect = sr.flipX ? SpriteEffects.FlipHorizontally : sr.flipX ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                Vector2 origin = new Vector2() { X = sr.size.X / 2, Y = sr.size.Y / 2 };
+                World.spriteBatch.Draw(sr.texture, pos, null, Color.White, 0, origin, 4, effect, 1);
             }
+            World.spriteBatch.End();
         }
     }
 }

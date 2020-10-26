@@ -10,10 +10,12 @@ namespace ECS
     {
         Type[] queryComponents;
         ComponentManager componentManager;
+        public bool useCache;
         public Query(Type[] components)
         {
             queryComponents = components;
             componentManager = ComponentManager.Instance();
+            useCache = false;
         }
 
         public Entity[] All()
@@ -21,9 +23,15 @@ namespace ECS
             HashSet<Entity> foundEntities = new HashSet<Entity>();
             foreach(Type componentType in queryComponents){
                 List<Entity> entities = componentManager.GetEntitiesWithComponent(componentType);
-                foundEntities.UnionWith(entities);
+                if(foundEntities.Count == 0)
+                {
+                    foundEntities.UnionWith(entities);
+                } 
+                else
+                {
+                    foundEntities.IntersectWith(entities);
+                }
             }
-
             return foundEntities.ToArray();
         }
     }

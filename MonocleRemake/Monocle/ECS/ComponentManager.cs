@@ -53,7 +53,11 @@ namespace ECS
 
         public List<Entity> GetEntitiesWithComponent(Type component)
         {
-            return stores[component].GetEntities();
+            if(stores.ContainsKey(component))
+            {
+                return stores[component].GetEntities();
+            }
+            return new List<Entity>();
         }
     }
 }
