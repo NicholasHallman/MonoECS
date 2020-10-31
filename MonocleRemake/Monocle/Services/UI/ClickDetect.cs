@@ -14,7 +14,7 @@ namespace MonocleRemake.Monocle.Services.UI
 
         public ClickDetect()
         {
-            query = new Query(componentTypes);
+            query = Query.All(componentTypes);
         }
 
         private static bool InBounds(Vector2 cursor, Rectangle b)

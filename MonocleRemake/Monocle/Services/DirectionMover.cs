@@ -15,7 +15,7 @@ namespace MonocleRemake.Monocle.Services
 
         public DirectionMover()
         {
-            query = new Query(componentTypes);
+            query = Query.All(componentTypes);
         }
 
         public override void Execute(Entity[] entities, World w)

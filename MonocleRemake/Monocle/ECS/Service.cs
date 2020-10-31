@@ -26,7 +26,7 @@ namespace ECS
 
         public void Run(World w)
         {
-            Execute(query.All(), w);
+            Execute(query.Run(), w);
         }
     }
 }

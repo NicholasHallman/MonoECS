@@ -13,7 +13,7 @@ namespace MonocleRemake.Monocle.Services
 
         public DamageFromFire()
         {
-            query = new Query(typeComponents);
+            query = Query.All(typeComponents);
         }
 
         public override void Execute(Entity[] entities, World w)

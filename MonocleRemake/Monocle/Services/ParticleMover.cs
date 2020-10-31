@@ -14,7 +14,7 @@ namespace MonocleRemake.Monocle.Services
         static Type[] QueryComponents = { typeof(ParticleTag) };
 
         public ParticleMover(){
-            query = new Query(QueryComponents);
+            query = Query.All(QueryComponents);
         }
 
         public override void Execute(Entity[] entities, World w)

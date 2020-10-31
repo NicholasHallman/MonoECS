@@ -12,7 +12,7 @@ namespace MonocleRemake.Monocle.Services
 
         public LifetimeDespawner()
         {
-            query = new Query(typeComponents);
+            query = Query.All(typeComponents);
         }
 
         public override void Execute(Entity[] entities, World w)

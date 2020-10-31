@@ -61,7 +61,7 @@ namespace Monocle.Tests
             Type[] testComponentA = new Type[] { typeof(TestComponent) };
 
             Service s = new TestService()
-                .AddQuery(new Query(testComponentA));
+                .AddQuery(Query.All(testComponentA));
 
             w.AddService(s);
 

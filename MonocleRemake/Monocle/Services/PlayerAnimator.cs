@@ -16,7 +16,7 @@ namespace MonocleRemake.Monocle.Services
 
         public PlayerAnimator()
         {
-            query = new Query(QueryComponents);
+            query = Query.All(QueryComponents);
         }
 
         override public void Execute(Entity[] entities, World w)

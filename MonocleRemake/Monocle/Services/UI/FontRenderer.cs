@@ -14,7 +14,7 @@ namespace MonocleRemake.Monocle.Services.UI
         
         public FontRenderer()
         {
-            query = new Query(componentTypes);
+            query = Query.All(componentTypes);
         }
 
         public override void Execute(Entity[] entities, World w)

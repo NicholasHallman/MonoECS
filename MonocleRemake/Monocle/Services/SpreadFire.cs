@@ -14,7 +14,7 @@ namespace MonocleRemake.Monocle.Services
 
         public SpreadFire()
         {
-            base.query = new Query(typeComponents);
+            base.query = Query.All(typeComponents);
         }
         public override void Execute(Entity[] entities, World w)
         {

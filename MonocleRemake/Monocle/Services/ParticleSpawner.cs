@@ -13,7 +13,7 @@ namespace MonocleRemake.Monocle.Services
 
         public ParticleSpawner()
         {
-            query = new Query(componentTypes);
+            query = Query.All(componentTypes);
         }
 
         

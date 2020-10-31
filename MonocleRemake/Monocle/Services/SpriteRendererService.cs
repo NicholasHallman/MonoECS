@@ -17,7 +17,7 @@ namespace MonocleRemake.Monocle.Services
 
         public SpriteRendererService()
         {
-            query = new Query(QueryComponents);
+            query = Query.All(QueryComponents);
         }
 
         public override void Execute(Entity[] entities, World w)

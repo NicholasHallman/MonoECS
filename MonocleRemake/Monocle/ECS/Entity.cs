@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -77,6 +79,11 @@ namespace ECS
                 ComponentType = t
             };
             return componentManager.Get(cr) as T;
+        }
+
+        public Type[] GetAllComponents()
+        {
+            return components.Keys.ToArray();
         }
 
         public void ReassignComponent(Type component, int newIndex)
