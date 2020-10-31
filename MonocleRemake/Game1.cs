@@ -26,13 +26,13 @@ namespace MonocleRemake
 
             _graphics.ToggleFullScreen();
 
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
 
             _graphics.ToggleFullScreen();
 
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
 
             //_graphics.ToggleFullScreen();
 
@@ -106,7 +106,7 @@ namespace MonocleRemake
             {
                 for(int j = 0; j < 5; j++)
                 {
-                    Bush.Register(world, new Vector2(1920 / 2 + (64 * i), 1080 / 2 + (64 * j)));
+                    Bush.Register(world, new Vector2(1280 / 2 + (64 * i), 720 / 2 + (64 * j)));
 
                 }
             }

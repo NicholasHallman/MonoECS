@@ -1,5 +1,8 @@
 # MonoECS
 
+![](monoecs.gif)
+
+
 ![](particleDemo.gif)
 
 An Entitiy Component System for monogame,
