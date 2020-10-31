@@ -21,17 +21,8 @@ namespace ECS
         
         public Entity AddComponent<T>() where T : Component
         {
-            T component = (T)Activator.CreateInstance(typeof(T));
-            Type t = component.GetType();
-            component.SetEntity(this);
-
-            if (components.ContainsKey(t))
-            {
-                throw new Exception("Entity already has a component of type " + t.ToString());
-            }
-
-            int position = componentManager.Add(component);
-            components[component.GetType()] = position;
+            int position = componentManager.Add<T>(this);
+            components[typeof(T)] = position;
 
             return this;
         }
@@ -77,7 +68,7 @@ namespace ECS
 
             if( !components.ContainsKey(t))
             {
-                throw new Exception("Entity does not have a component of type " + t.ToString());
+                return null;
             }
 
             ComponentReference cr = new ComponentReference()
@@ -86,6 +77,11 @@ namespace ECS
                 ComponentType = t
             };
             return componentManager.Get(cr) as T;
+        }
+
+        public void ReassignComponent(Type component, int newIndex)
+        {
+            components[component] = newIndex;
         }
     }
 }

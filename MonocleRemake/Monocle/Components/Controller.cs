@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ECS.Monocle
 {
-    class Lifetime : Component
+    class Controller : Component
     {
-        public DateTime birth;
-        public int lifeInMilliseconds;
+        public DateTime lockedAt;
+        public int lockedFor;
     }
 }

@@ -24,18 +24,17 @@ namespace MonocleRemake.Monocle.Services
             {
                 Entity entity = entities[i];
 
-                Position pos = entity.GetComponent<Position>();
-                Direction dir = entity.GetComponent<Direction>();
+                Transform transform = entity.GetComponent<Transform>();
 
-                pos.position = new Vector2(pos.position.X + dir.direction.X, pos.position.Y + dir.direction.Y);
+                transform.position = new Vector2(transform.position.X + transform.direction.X, transform.position.Y + transform.direction.Y);
 
-                if (pos.position.X >= 1920 || pos.position.X <= 0)
+                if (transform.position.X >= 1920 || transform.position.X <= 0)
                 {
-                    dir.direction = new Vector2(dir.direction.X * -1, dir.direction.Y);
+                    transform.direction = new Vector2(transform.direction.X * -1, transform.direction.Y);
                 }
-                if (pos.position.Y >= 1080 || pos.position.Y <= 0)
+                if (transform.position.Y >= 1080 || transform.position.Y <= 0)
                 {
-                    dir.direction = new Vector2(dir.direction.X, dir.direction.Y * -1);
+                    transform.direction = new Vector2(transform.direction.X, transform.direction.Y * -1);
                 }
             }
         }

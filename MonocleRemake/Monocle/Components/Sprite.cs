@@ -11,6 +11,8 @@ namespace ECS.Monocle
     {
         public Texture2D texture;
         public Vector2 size;
+        public int scale;
+        public double rotation;
         public bool flipX;
         public bool flipY;
     }

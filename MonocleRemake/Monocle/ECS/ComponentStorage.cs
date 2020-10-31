@@ -1,62 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Threading;
+using Windows.ApplicationModel.Calls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace ECS
 {
     class ComponentStorage
     {
         private Component[] store;
-        private List<int> empty;
         private int tail;
         public ComponentStorage()
         {
             store = new Component[100];
-            empty = new List<int>();
             tail = 0;
         }
-        
-        public int Add(Component component)
+
+        public int Add<T>(Entity e) where T : Component
         {
-            if(empty.Count > 0)
+
+            if (tail >= store.Length)
             {
-                int index = empty[0];
-                store[index] = component;
-                empty.RemoveAt(0);
-                return index;
-            } 
-            else
-            {
-                if(tail >= store.Length)
-                {
-                    Array.Resize(ref store, store.Length + 50);
-                }
-                store[tail] = component;
-                tail++;
-                return tail - 1;
+                Array.Resize(ref store, store.Length * 2);
             }
+            store[tail] = (T)Activator.CreateInstance(typeof(T));
+            store[tail].SetEntity(e);
+            tail++;
+            return tail - 1;
+            
         }
 
         public void Remove(int index)
         {
-            store[index] = null;
-            empty.Add(index);
+            if(index != tail - 1 && tail > 0)
+            {
+                store[index] = store[tail - 1];
+                Type t = store[index].GetType();
+                store[index].GetEntity().ReassignComponent(t, index);
+                tail -= 1;
+            } 
+            else if(index == tail - 1)
+            {
+                tail -= 1;
+            }
+            else
+            {
+                Debug.Write("Couldn't Swap index: " + index + " tail: " + tail);
+            }
         }
 
         public Component Get(int index)
         {
             return store[index];
         }
-
+        
         public Component[] Dump()
         {
             return store;
-        }
-
-        public List<int> Empty()
-        {
-            return empty;
         }
 
         public List<Entity> GetEntities()
@@ -64,10 +67,7 @@ namespace ECS
             List<Entity> entities = new List<Entity>();
             for(int i = 0; i < tail; i++)
             {
-                if(!empty.Contains(i))
-                {
-                    entities.Add(store[i].GetEntity());
-                }
+                entities.Add(store[i].GetEntity());
             }
 
             return entities;

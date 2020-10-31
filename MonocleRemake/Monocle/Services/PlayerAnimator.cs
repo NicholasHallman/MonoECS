@@ -30,16 +30,24 @@ namespace MonocleRemake.Monocle.Services
 
                 if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.A))
                 {
-                    if(anim.currentAction == "standing")
+                    if(anim.currentAction != "walking")
                     {
                         anim.currentFrame = 1;
                         anim.currentAction = "walking";
                     }
-                } else
+                }
+                else if (state.IsKeyDown(Keys.Space))
+                {
+                    anim.currentFrame = 0;
+                    anim.currentTimer = 101;
+                    anim.currentAction = "casting";
+                }
+                else
                 {
                     anim.currentAction = "standing";
                     anim.currentFrame = 0;
                 }
+                
             }
         }
     }

@@ -31,14 +31,14 @@ namespace ECS
             return instance;
         }
 
-        public int Add(Component component)
+        public int Add<T>(Entity e) where T : Component
         {
-            Type type = component.GetType();
+            Type type = typeof(T);
             if (!stores.ContainsKey(type))
             {
                 stores[type] = new ComponentStorage();
             }
-            return stores[type].Add(component);
+            return stores[type].Add<T>(e);
         }
 
         public void Remove(ComponentReference cr)

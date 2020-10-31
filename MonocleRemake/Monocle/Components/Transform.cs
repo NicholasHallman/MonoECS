@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace ECS.Monocle
 {
-    class Position : Component
+    class Transform : Component
     {
         public Vector2 position;
+        public Vector2 direction;
+        public float speed;
     }
 }

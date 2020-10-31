@@ -1,11 +1,10 @@
-﻿using ECS;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECS.Monocle
 {
-    class ParticleTag : Component
+    class Spin : Component
     {
     }
 }

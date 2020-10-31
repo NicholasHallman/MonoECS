@@ -14,23 +14,23 @@ namespace ECS.Monocle
         static public void Register(World w)
         {
             Entity playerEntity = w.CreateEntity()
-                .AddComponent<Position>()
-                .AddComponent<Direction>()
+                .AddComponent<Transform>()
                 .AddComponent<Sprite>()
                 .AddComponent<Animation>()
                 .AddComponent<SpellLimiter>()
-                .AddComponent<PlayerTag>();
+                .AddComponent<PlayerTag>()
+                .AddComponent<Controller>();
 
-            Position pos = playerEntity.GetComponent<Position>();
-            pos.position = new Vector2(50, 50);
-
-            Direction dir = playerEntity.GetComponent<Direction>();
-            dir.speed = 0;
-            dir.direction = new Vector2(1, 0);
+            Transform transform = playerEntity.GetComponent<Transform>();
+            transform.position = new Vector2(50, 50);
+            transform.speed = 0;
+            transform.direction = new Vector2(1, 0);
 
             Sprite sr = playerEntity.GetComponent<Sprite>();
             sr.texture = World.content.Load<Texture2D>("wizard_s_2");
             sr.size = new Vector2(16, 32);
+            sr.rotation = 0;
+            sr.scale = 4;
 
             Keyframes walking = new Keyframes
             {
@@ -50,11 +50,20 @@ namespace ECS.Monocle
                 },
                 delays = new int[] { 0 }
             };
+            Keyframes casting = new Keyframes
+            {
+                frames = new Texture2D[]
+                {
+                    World.content.Load<Texture2D>("wizard_s_5")
+                },
+                delays = new int[] { 100 }
+            };
 
             Animation anim = playerEntity.GetComponent<Animation>();
             Dictionary<string, Keyframes> actions = new Dictionary<string, Keyframes>();
             actions.Add("walking", walking );
             actions.Add("standing", standing );
+            actions.Add("casting", casting );
             anim.actionFrames = actions;
             anim.currentAction = "walking";
             anim.currentTimer = 0;

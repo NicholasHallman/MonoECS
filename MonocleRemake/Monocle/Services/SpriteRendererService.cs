@@ -12,7 +12,7 @@ namespace MonocleRemake.Monocle.Services
     {
         public static Type[] QueryComponents = new Type[]{
             typeof(Sprite), 
-            typeof(Position)
+            typeof(Transform)
         };
 
         public SpriteRendererService()
@@ -27,10 +27,10 @@ namespace MonocleRemake.Monocle.Services
             foreach (Entity entity in entities)
             {
                 Sprite sr = entity.GetComponent<Sprite>();
-                Vector2 pos = (entity.GetComponent<Position>()).position;
+                Vector2 pos = (entity.GetComponent<Transform>()).position;
                 SpriteEffects effect = sr.flipX ? SpriteEffects.FlipHorizontally : sr.flipX ? SpriteEffects.FlipVertically : SpriteEffects.None;
                 Vector2 origin = new Vector2() { X = sr.size.X / 2, Y = sr.size.Y / 2 };
-                World.spriteBatch.Draw(sr.texture, pos, null, Color.White, 0, origin, 4, effect, 1);
+                World.spriteBatch.Draw(sr.texture, pos, null, Color.White, (float)sr.rotation, origin, sr.scale, effect, 1);
             }
             World.spriteBatch.End();
         }

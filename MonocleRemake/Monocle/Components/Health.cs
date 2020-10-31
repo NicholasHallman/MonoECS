@@ -5,7 +5,9 @@ using System.Text;
 
 namespace ECS.Monocle
 {
-    class ParticleTag : Component
+    class Health : Component
     {
+        public int total;
+        public int current;
     }
 }
