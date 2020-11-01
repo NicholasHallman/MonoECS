@@ -1,9 +1,15 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using ICSharpCode.Decompiler.CSharp.Syntax;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonocleRemake.Monocle.ECS;
+using ECS.Monocle;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework;
+using Humanizer;
 
 namespace ECS
 {
@@ -32,6 +38,71 @@ namespace ECS
             entities.Add(entity);
             RemoveServiceCache();
             return entity;
+        }
+
+        private static Type GetType(string typeName)
+        {
+            var type = Type.GetType(typeName);
+            if (type != null) return type;
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = a.GetType(typeName);
+                if (type != null)
+                    return type;
+            }
+            return null;
+        }
+
+        public void LoadEntities(string path)
+        {
+            EntityLoader loader = new EntityLoader();
+            dynamic[] potentialEntities = loader.Load(path);
+            foreach(dynamic potentialEntity in potentialEntities)
+            {
+                Entity e = this.CreateEntity();
+                foreach(dynamic component in potentialEntity)
+                {
+                    InitializeComponent(e, component);
+                }
+            }
+            return;
+        }
+
+        private void SetField(Component component, dynamic property)
+        {
+            FieldInfo field = component.GetType().GetField(property.Key);
+            if (field.FieldType == typeof(Texture2D))
+            {
+                field.SetValue(component, content.Load<Texture2D>(property.Value));
+            }
+            else if(field.FieldType == typeof(Vector2))
+            {
+                Vector2 vec = new Vector2();
+                foreach(dynamic p in property.Value)
+                {
+                    if (p.Key == "X") vec.X = Convert.ChangeType(p.Value, typeof(float));
+                    if (p.Key == "Y") vec.Y = Convert.ChangeType(p.Value, typeof(float));
+                }
+                field.SetValue(component, vec);
+            }
+            else
+            {
+                field.SetValue(component, Convert.ChangeType(property.Value, field.FieldType));
+            }
+        }
+
+        private void InitializeComponent(Entity e, dynamic Component)
+        {
+            string compName = Component.Key;
+            Type compType = GetType("ECS.Monocle."+compName);
+            if (compType == null) throw new Exception("Component does note exist");
+            typeof(Entity).GetMethod("AddComponent").MakeGenericMethod(compType).Invoke(e, new object[] { });
+            var component = (Component)typeof(Entity).GetMethod("GetComponent").MakeGenericMethod(compType).Invoke(e, new object[] { });
+
+            foreach (dynamic property in Component.Value)
+            {
+                SetField(component, property);
+            }
         }
 
         public void RemoveEntity(Entity e)

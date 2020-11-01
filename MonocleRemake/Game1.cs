@@ -58,58 +58,9 @@ namespace MonocleRemake
             World.content = Content;
             World.GraphicsDevice = GraphicsDevice;
 
-            Entity pauseButton = new Entity();
-            Entity playButton = new Entity();
-            Action<Entity> TogglePauseButtonOnClick = (pauseButton) => { };
-            Entity cherryPetals = CherryPetalEmitter.Register(world);
-
-            Action<Entity> TogglePlayButtonOnClick = (playButton) =>
-            {
-                world.RemoveEntity(playButton);
-                cherryPetals = CherryPetalEmitter.Register(world);
-                pauseButton = ToggleButton.Register(world,
-                    Content.Load<Texture2D>("play-toggle1"),
-                    Content.Load<Texture2D>("play-toggle2"),
-                    new Vector2(1920 / 2, 32),
-                    new Vector2(16, 16),
-                    TogglePauseButtonOnClick
-                );
-            };
-
-            TogglePauseButtonOnClick = (pauseButton) =>
-            {
-                world.RemoveEntity(pauseButton);
-                world.RemoveEntity(cherryPetals);
-                playButton = ToggleButton.Register(world,
-                    Content.Load<Texture2D>("play-toggle3"),
-                    Content.Load<Texture2D>("play-toggle4"),
-                    new Vector2(1920 / 2, 32),
-                    new Vector2(16, 16),
-                    TogglePlayButtonOnClick
-                );
-            };
-
-            
-
-            pauseButton = ToggleButton.Register(world, 
-                Content.Load<Texture2D>("play-toggle1"), 
-                Content.Load<Texture2D>("play-toggle2"),
-                new Vector2(1920 / 2, 32), 
-                new Vector2(16, 16),
-                TogglePauseButtonOnClick
-            );
-
-            
+            world.LoadEntities("Entities/Stage1/entityTest.yml");
 
             Player.Register(world);
-            for(int i = 0; i < 5; i++)
-            {
-                for(int j = 0; j < 5; j++)
-                {
-                    Bush.Register(world, new Vector2(1920 / 2 + (64 * i), 1080 / 2 + (64 * j)));
-
-                }
-            }
 
             fpsDisplay = world.CreateEntity()
                 .AddComponent<Label>()
@@ -125,7 +76,6 @@ namespace MonocleRemake
             world.AddServiceGroup("draw");
             world.AddServiceGroup("update");
 
-            world.AddService(new ClickDetect(), "update");
             world.AddService(new LifetimeDespawner(), "update");
             world.AddService(new ParticleSpawner(), "update");
             world.AddService(new PlayerController(), "update");
