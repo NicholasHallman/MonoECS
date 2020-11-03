@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Humanizer;
+using Monocle.ECS;
 
 namespace ECS
 {
@@ -17,6 +18,7 @@ namespace ECS
     {
         private List<Entity> entities;
         private ComponentManager componentManager;
+        private Archetypes archetypes;
         private Dictionary<string, List<Service>> services;
         private bool cacheEmpty = true;
 
@@ -29,6 +31,7 @@ namespace ECS
             entities = new List<Entity>();
             componentManager = ComponentManager.Instance();
             services = new Dictionary<string, List<Service>>();
+            archetypes = Archetypes.Instance();
             services["default"] = new List<Service>();
         }
 
@@ -108,6 +111,7 @@ namespace ECS
         public void RemoveEntity(Entity e)
         {
             entities.Remove(e);
+            archetypes.Remove(e);
             e.RemoveAllComponents();
             cacheEmpty = true;
         }

@@ -19,6 +19,7 @@
     isOnFire: false
     percentChanceToSpread: 10
     damagePerUpdate: 1
+
 - Sprite:
     texture: bush
     size:
@@ -40,3 +41,21 @@
     isOnFire: false
     percentChanceToSpread: 10
     damagePerUpdate: 1
+
+- Sprite:
+    texture: bush
+    size:
+      X: 16
+      Y: 16
+    scale: 4
+    flipX: false
+    flipY: false
+    rotation: 0
+  Transform:
+    position:
+      X: 96
+      Y: 96
+    direction:
+      X: 0
+      Y: 0
+    speed: 0

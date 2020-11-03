@@ -98,7 +98,6 @@ namespace MonocleRemake
             // TODO: Add your update logic here
             world.Run("update");
 
-
             base.Update(gameTime);
         }
 

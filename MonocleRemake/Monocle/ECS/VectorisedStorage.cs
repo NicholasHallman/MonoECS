@@ -9,25 +9,24 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace ECS
 {
-    class ComponentStorage
+    class VectorisedStorage<U>
     {
-        private Component[] store;
+        private U[] store;
         private int tail;
-        public ComponentStorage()
+        public VectorisedStorage()
         {
-            store = new Component[100];
+            store = new U[100];
             tail = 0;
         }
 
-        public int Add<T>(Entity e) where T : Component
+        public int Add(U u)
         {
 
             if (tail >= store.Length)
             {
                 Array.Resize(ref store, store.Length * 2);
             }
-            store[tail] = (T)Activator.CreateInstance(typeof(T));
-            store[tail].SetEntity(e);
+            store[tail] = u;
             tail++;
             return tail - 1;
             
@@ -39,7 +38,14 @@ namespace ECS
             {
                 store[index] = store[tail - 1];
                 Type t = store[index].GetType();
-                store[index].GetEntity().ReassignComponent(t, index);
+                if (typeof(U) == typeof(Component))
+                {
+                    ((dynamic)store[index]).GetEntity().ReassignComponent(t, index);
+                }
+                if(typeof(U) == typeof(Entity))
+                {
+                    ((dynamic)store[index]).archetypeId = index;
+                }
                 tail -= 1;
             } 
             else if(index == tail - 1)
@@ -52,22 +58,29 @@ namespace ECS
             }
         }
 
-        public Component Get(int index)
+        public U Get(int index)
         {
             return store[index];
         }
         
-        public Component[] Dump()
+        public U[] Dump()
         {
-            return store;
+            int diff = store.Length - tail;
+            U[] copyStore = new U[store.Length - diff];
+            Array.Copy(store, copyStore, copyStore.Length);
+            return copyStore;
         }
 
         public List<Entity> GetEntities()
         {
+            if (typeof(U) != typeof(Component)) return new List<Entity>();
             List<Entity> entities = new List<Entity>();
             for(int i = 0; i < tail; i++)
             {
-                entities.Add(store[i].GetEntity());
+                if(typeof(U) == typeof(Component))
+                {
+                    entities.Add(((dynamic)store[i]).GetEntity());
+                }
             }
 
             return entities;

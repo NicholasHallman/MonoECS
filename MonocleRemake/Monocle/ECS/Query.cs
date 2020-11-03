@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monocle.ECS;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,7 @@ namespace ECS
         Type[] queryComponents;
         Type[] excludeComponents;
         ComponentManager componentManager;
+        Archetypes archetypes;
         string mode;
         public bool useCache;
         private Query(Type[] components)
@@ -20,6 +22,7 @@ namespace ECS
             queryComponents = components;
             componentManager = ComponentManager.Instance();
             useCache = false;
+            archetypes = Archetypes.Instance();
         }
 
         private Query(Type[] components, string mode = "All")
@@ -74,28 +77,29 @@ namespace ECS
 
         private Entity[] RunAll()
         {
-            HashSet<Entity> foundEntities = new HashSet<Entity>();
-            foreach (Type componentType in queryComponents)
-            {
-                List<Entity> entities = componentManager.GetEntitiesWithComponent(componentType);
-                if (foundEntities.Count == 0)
-                {
-                    foundEntities.UnionWith(entities);
-                }
-                else
-                {
-                    foundEntities.IntersectWith(entities);
-                }
-            }
-            if (excludeComponents != null)
-            {
-                foreach (Type componentType in excludeComponents)
-                {
-                    List<Entity> entities = componentManager.GetEntitiesWithComponent(componentType);
-                    foundEntities.ExceptWith(entities);
-                }
-            }
-            return foundEntities.ToArray();
+            return archetypes.AllEntitiesOf(queryComponents, excludeComponents);
+        //    HashSet<Entity> foundEntities = new HashSet<Entity>();
+        //    foreach (Type componentType in queryComponents)
+        //    {
+        //        List<Entity> entities = componentManager.GetEntitiesWithComponent(componentType);
+        //        if (foundEntities.Count == 0)
+        //        {
+        //            foundEntities.UnionWith(entities);
+        //        }
+        //        else
+        //        {
+        //            foundEntities.IntersectWith(entities);
+        //        }
+        //    }
+        //    if (excludeComponents != null)
+        //    {
+        //        foreach (Type componentType in excludeComponents)
+        //        {
+        //            List<Entity> entities = componentManager.GetEntitiesWithComponent(componentType);
+        //            foundEntities.ExceptWith(entities);
+        //        }
+        //    }
+        //    return foundEntities.ToArray();
         }
 
 

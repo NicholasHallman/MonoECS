@@ -14,12 +14,12 @@ namespace ECS
     }
     class ComponentManager
     {
-        private Dictionary<Type, ComponentStorage> stores;
+        private Dictionary<Type, VectorisedStorage<Component>> stores;
         public static ComponentManager instance;
 
         public ComponentManager()
         {
-            stores = new Dictionary<Type, ComponentStorage>();
+            stores = new Dictionary<Type, VectorisedStorage<Component>>();
         }
 
         public static ComponentManager Instance()
@@ -31,14 +31,14 @@ namespace ECS
             return instance;
         }
 
-        public int Add<T>(Entity e) where T : Component
+        public int Add(Component c)
         {
-            Type type = typeof(T);
+            Type type = c.GetType();
             if (!stores.ContainsKey(type))
             {
-                stores[type] = new ComponentStorage();
+                stores[type] = new VectorisedStorage<Component>();
             }
-            return stores[type].Add<T>(e);
+            return stores[type].Add(c);
         }
 
         public void Remove(ComponentReference cr)

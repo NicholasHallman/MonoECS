@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Monocle.ECS;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -13,19 +14,25 @@ namespace ECS
     {
         private ComponentManager componentManager;
         private Dictionary<Type, int> components;
+        private Archetypes archetypes;
         public Guid id { get; private set; }
+        public int archetypeId = -1;
         public Entity()
         {
             componentManager = ComponentManager.Instance();
             components = new Dictionary<Type, int>();
+            archetypes = Archetypes.Instance();
             id = new Guid();
         }
         
         public Entity AddComponent<T>() where T : Component
         {
-            int position = componentManager.Add<T>(this);
+            Type[] oldComponents = GetAllComponents();
+            T component = (T)Activator.CreateInstance(typeof(T));
+            component.SetEntity(this);
+            int position = componentManager.Add(component);
             components[typeof(T)] = position;
-
+            archetypes.ChangeArchetype(this, oldComponents);
             return this;
         }
 
@@ -46,12 +53,16 @@ namespace ECS
                 index = position,
                 ComponentType = t
             });
+            Type[] oldComponents = GetAllComponents();
             components.Remove(t);
+            archetypes.ChangeArchetype(this, oldComponents);
+
         }
 
         public void RemoveAllComponents()
         {
-            foreach(Type component in components.Keys)
+            Type[] oldComponents = GetAllComponents();
+            foreach (Type component in components.Keys)
             {
                 int index = components[component];
                 ComponentReference componentReference = new ComponentReference()
